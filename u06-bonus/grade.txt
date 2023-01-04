@@ -1,0 +1,184 @@
+NETHZ: jkuehne
+
+Total points (max. 5): 5
+
+compile errors: NO
+timeout: NO
+
+test01False: PASS
+test02False: PASS
+test03False: PASS
+test04False: PASS
+test05False: PASS
+test06False: PASS
+test07False: PASS
+test08False: PASS
+test09False: PASS
+test10True: PASS
+test11True: PASS
+test12True: PASS
+test13True: PASS
+test14True: PASS
+test15True: PASS
+test16True: PASS
+test17True: PASS
+test18True: PASS
+
+
+Folgende Test-Datei wurde für die Bewertung verwendet:
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+public class GradingPrefixConstructionsTest {
+		
+	@Test
+	public void test01False() {
+		String s = "z";
+		String t = "";
+		int n = 1;
+		assertFalse(PrefixConstruction.isPrefixConstruction(s,t,n));
+	}
+	
+	@Test
+	public void test02False() {
+		String s = "xyz";
+		String t = "xyz";
+		int n = 0;
+		assertFalse(PrefixConstruction.isPrefixConstruction(s,t,n));
+	}
+		
+	@Test
+	public void test03False() {
+		String s = "cabc";
+		String t = "abc";
+		int n = 2;
+		assertFalse(PrefixConstruction.isPrefixConstruction(s,t,n));
+	}
+		
+	@Test
+	public void test04False() {
+		String s = "ababab";
+		String t = "ab";
+		int n = 2;
+		assertFalse(PrefixConstruction.isPrefixConstruction(s,t,n));
+	}
+		
+	@Test
+	public void test05False() {
+		String s = "cdefcdefef";
+		String t = "cdef";
+		int n = 3;
+		assertFalse(PrefixConstruction.isPrefixConstruction(s,t,n));
+	}
+		
+	@Test
+	public void test06False() {
+		String s = "efg";
+		String t = "abc";
+		int n = 1;
+		assertFalse(PrefixConstruction.isPrefixConstruction(s,t,n));
+	}
+	
+	@Test
+	public void test07False() {
+		String s = "efghefh";
+		String t = "efgh";
+		int n = 2;
+		assertFalse(PrefixConstruction.isPrefixConstruction(s,t,n));
+	}
+		
+	@Test
+	public void test08False() {
+		String s = "ababbabbba";
+		String t = "abba";
+		int n = 4;
+		assertFalse(PrefixConstruction.isPrefixConstruction(s,t,n));
+	}
+		
+	@Test
+	public void test09False() {
+		String s = "abcdeabcdefabcdefgabcdefgabcabcd";
+		String t = "abcdefg";
+		int n = 5;
+		assertFalse(PrefixConstruction.isPrefixConstruction(s,t,n));
+	}
+	
+	/** true tests */
+	@Test
+	public void test10True() {
+		String s = "aaaaaa";
+		String t = "a";
+		int n = 7;
+		
+		assertTrue(PrefixConstruction.isPrefixConstruction(s, t, n));
+	}
+	
+	@Test
+	public void test11True() {
+		String s = "ababab";
+		String t = "ab";
+		int n = 3;
+		assertTrue(PrefixConstruction.isPrefixConstruction(s,t,n));
+		assertTrue(PrefixConstruction.isPrefixConstruction(s,t,n+1));
+	}
+	
+	@Test
+	public void test12True() {
+		String s = "abcdefgxyz";
+		String t = "abcdefgxyz";
+		int n = 1;
+		assertTrue(PrefixConstruction.isPrefixConstruction(s,t,n));
+	}
+	
+	@Test
+	public void test13True() {
+		String s = "ababa";
+		String t = "aba";
+		int n = 2;
+		assertTrue(PrefixConstruction.isPrefixConstruction(s,t,n));
+	}
+
+	@Test
+	public void test14True() {
+		String s = "defgdefgdefg";
+		String t = "defg";
+		int n = 3;
+		assertTrue(PrefixConstruction.isPrefixConstruction(s,t,n));
+	}
+	
+	@Test
+	public void test15True() {
+		String s = "efgxyz";
+		String t = "efgxyzh";
+		int n = 1;
+		assertTrue(PrefixConstruction.isPrefixConstruction(s,t,n));
+	}
+	
+	@Test
+	public void test16True() {
+		String s = "efgefefge";
+		String t = "efgh";
+		int n = 4;
+		assertTrue(PrefixConstruction.isPrefixConstruction(s,t,n));
+	}
+
+	@Test
+	public void test17True() {
+		String s = "ababbababba";
+		String t = "abba";
+		int n = 4;
+		assertTrue(PrefixConstruction.isPrefixConstruction(s,t,n));
+	}
+
+	@Test
+	public void test18True() {
+		String s = "xyyxxyxyyxyxyyxxyyxyxyxx";
+		String t = "xyyx";
+		int n = 10;
+		assertTrue(PrefixConstruction.isPrefixConstruction(s,t,n));
+		assertTrue(PrefixConstruction.isPrefixConstruction(s,t,n+1));
+	}
+
+}

@@ -1,0 +1,601 @@
+NETHZ: jkuehne
+
+Total Points: 5
+Total Percentage: 100.00%
+
+Nontrivial Tests: 9
+Trivial Tests: 11
+
+compile errors: NO
+nondeterministic: NO
+timeout: NO
+
+test01BasicSimpleWorldInit: PASS
+test02BasicSimpleWorldInitNeg: PASS
+test03BasicConstruction3x3All: PASS
+test03BasicSimpleWorldHeight: PASS
+test04BasicSimpleWorldFlora: PASS
+test05BasicConstruction8x8Types: PASS
+test06BasicConstruction8x8All: PASS
+test101BasicDryUpColsSmallFloraChangeToWater: PASS
+test102BasicDryUpColsSmallFloraFlora: PASS
+test103AdvancedMultiDryUpColsSmallFlora: PASS
+test104AdvancedDryUpReachesEquilibriumFlora: PASS
+test105AdvancedDryUpRandomPatternHeight: PASS
+test201BasicDistributeIsland: PASS
+test202BasicDistributeHeightAllLand: PASS
+test203Advanced4x4TopRightP2: PASS
+test204Advanced4x4CenterIslandP2Height: PASS
+test205Advanced4x4CenterIslandP2DistributeTwice: PASS
+test301AdvancedDryUpDistributeStableFlora: PASS
+test302AdvancedDryUpDistributeStableHeight1: PASS
+test303AdvancedDryUpDistributeStableHeight2: PASS
+
+
+Folgende Test-Datei wurde für die Bewertung verwendet:
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+public class GradingBiomHiddenTest {
+	@Test
+	public void test01BasicSimpleWorldInit() {
+		var map = new String[][] {
+			{"W","W","W"},
+			{"W","F","W"},
+			{"W","W","W"},
+		};
+		
+		var world = new World(map);
+		
+		assertArrayEquals(map, actualBiomTypes(world, map.length));
+	}
+	
+	@Test
+	public void test02BasicSimpleWorldInitNeg() {
+		var map = new String[][] {
+			{"W","W","W"},
+			{"W","W","W"},
+			{"W","W","W"},
+		};
+		
+		var world = new World(map);
+		
+		assertNotEquals("F", world.getBiom(1, 1).getBiomType());
+	}
+	
+	@Test
+    public void test03BasicConstruction3x3All() {
+        testAllConstructions(3, false);
+    }
+	
+	@Test
+	public void test03BasicSimpleWorldHeight() {
+		var map = new String[][] {
+			{"W","W","W"},
+			{"F","F","F"},
+			{"W","W","W"},
+		};
+		
+		var world = new World(map);
+		
+		var expectedHeight = new int[][] {
+			{0, 0, 0},
+			{3, 3, 3},
+			{0, 0, 0}
+		};
+		
+		assertArrayEquals(expectedHeight, actualHeights(world, expectedHeight.length));
+	}
+	
+	@Test
+	public void test04BasicSimpleWorldFlora() {
+		var map = new String[][] {
+			{"W","W","W"},
+			{"F","F","F"},
+			{"W","W","W"},
+		};
+		
+		var world = new World(map);
+		
+		var expectedFlora= new int[][] {
+			{15, 15, 15},
+			{12, 12, 12},
+			{15, 15, 15}
+		};
+		
+		assertArrayEquals(expectedFlora, actualFlora(world, expectedFlora.length));
+	}
+	
+	@Test
+    public void test05BasicConstruction8x8Types() {
+        String[][] input = createInputArray(8, "W", "F", "F", "W", "F");
+        testConstructionHelper(input, true);
+    }
+
+    @Test
+    public void test06BasicConstruction8x8All() {
+        String[][] input = createInputArray(8, "W", "F", "F", "W", "F");
+        testConstructionHelper(input, false);
+    }
+	
+	
+    // b)
+    @Test
+    public void test101BasicDryUpColsSmallFloraChangeToWater() {
+        String[][] input = {
+            {"W", "F"},
+            {"W", "F"}
+        };
+
+        World w = new World(input);
+        w.stepDryUp();
+
+        assertArrayEquals(input, actualBiomTypes(w, 2));
+    }
+    
+    @Test
+    public void test102BasicDryUpColsSmallFloraFlora() {
+        String[][] input = {
+            {"W", "F"},
+            {"W", "F"}
+        };
+
+        World w = new World(input);
+        
+        for (var e : actualFlora(w, 2)) {
+        	for (var c : e) {
+        		System.out.println(c);
+        	}
+        }
+        
+        w.stepDryUp();
+
+        int[][] expectedFlora1 = {
+            {10, 9},
+            {10, 9}
+        };
+
+        for (var e : actualFlora(w, 2)) {
+        	for (var c : e) {
+        		System.out.println(c);
+        	}
+        }
+        
+        assertArrayEquals(expectedFlora1, actualFlora(w, 2));
+    }
+    
+    @Test
+    public void test103AdvancedMultiDryUpColsSmallFlora() {
+        String[][] input = {
+            {"W", "F"},
+            {"W", "F"}
+        };
+
+        World w = new World(input);
+        w.stepDryUp();
+
+        int[][] expectedFlora1 = {
+            {10, 9},
+            {10, 9}
+        };
+
+        assertArrayEquals(input, actualBiomTypes(w, 2));
+        assertArrayEquals(expectedFlora1, actualFlora(w, 2));
+
+        w.stepDryUp();
+
+        int[][] expectedFlora2 = {
+            {5, 6},
+            {5, 6}
+        };
+
+        assertArrayEquals(input, actualBiomTypes(w, 2));
+        assertArrayEquals(expectedFlora2, actualFlora(w, 2));
+
+        w.stepDryUp();
+
+        String[][] expectedType = {
+            {"W", "W"},
+            {"W", "W"}
+        };
+
+        int[][] expectedFlora3 = {
+            {0, 3},
+            {0, 3}
+        };
+
+        assertArrayEquals(expectedType, actualBiomTypes(w, 2));
+        assertArrayEquals(expectedFlora3, actualFlora(w, 2));
+
+        w.stepDryUp();
+
+        int[][] expectedFlora4 = {
+            {0, 0},
+            {0, 0}
+        };
+
+        assertArrayEquals(expectedType, actualBiomTypes(w, 2));
+        assertArrayEquals(expectedFlora4, actualFlora(w, 2));
+    }
+    
+    @Test
+    public void test104AdvancedDryUpReachesEquilibriumFlora() {
+        String[][] input = createInputArray(4, "F");
+
+        World w = new World(input);
+        w.stepDryUp();
+
+        assertArrayEquals(input, actualBiomTypes(w, 4));
+        assertArrayEquals(createIntArray(4, 9), actualFlora(w, 4));
+
+        w.stepDryUp();
+
+        assertArrayEquals(input, actualBiomTypes(w, 4));
+        assertArrayEquals(createIntArray(4, 6), actualFlora(w, 4));
+
+        w.stepDryUp();
+
+        String[][] onlyWater = createInputArray(4, "W");
+        int[][] onlyZeros = createIntArray(4, 0);
+
+        assertArrayEquals(onlyWater, actualBiomTypes(w, 4));
+        assertArrayEquals(createIntArray(4, 3), actualFlora(w, 4));
+
+        for (int i = 0; i < 5; ++i) {
+            w.stepDryUp();
+
+            assertArrayEquals(onlyWater, actualBiomTypes(w, 4));
+            assertArrayEquals(onlyZeros, actualFlora(w, 4));
+        }
+    }
+    
+    @Test
+    public void test105AdvancedDryUpRandomPatternHeight() {
+        String[][] input = {
+            {"W", "F", "W", "W", "F"},
+            {"W", "F", "F", "F", "F"},
+            {"F", "W", "F", "F", "W"},
+            {"W", "F", "W", "W", "W"},
+            {"F", "F", "W", "F", "F"}
+        };
+
+        World w = new World(input);
+        w.stepDryUp();
+
+        int[][] expectedHeight = {
+            {0, 2, 0, 0, 2},
+            {0, 2, 2, 2, 2},
+            {2, 0, 2, 2, 0},
+            {0, 2, 0, 0, 0},
+            {2, 2, 0, 2, 2}
+        };
+
+        assertArrayEquals(input, actualBiomTypes(w, 5));
+        assertArrayEquals(expectedHeight, actualHeights(w, 5));
+
+        w.stepDryUp();
+        w.stepDryUp();
+        w.stepDryUp();
+
+        assertArrayEquals(createInputArray(5, "W"), actualBiomTypes(w, 5));
+        assertArrayEquals(createIntArray(5, 0), actualHeights(w, 5));
+    }
+        
+	@Test 
+	void test201BasicDistributeIsland() {
+		var map = new String[][] {
+			{"W","W","W"},
+			{"F","F","F"},
+			{"W","W","W"},
+		};
+		
+		var world = new World(map);
+		
+		// {15, 15, 15},
+		// {12, 12, 12},
+		// {15, 15, 15}
+		
+		world.stepDistribute(1);
+		
+		assertEquals(54, world.getBiom(1, 1).getFlora());
+	}
+	
+	@Test 
+	void test202BasicDistributeHeightAllLand() {
+		var map = new String[][] {
+			{"F","F","F"},
+			{"F","F","F"},
+			{"F","F","F"},
+		};
+		
+		var world = new World(map);
+		
+		// height 3 for all 
+		
+		world.stepDistribute(1);
+		
+		assertEquals(3 + 4, world.getBiom(1, 1).getHeight());
+	}
+	
+	@Test
+	void test203Advanced4x4TopRightP2() {
+		var map = new String[][] {
+			{"F","W","F", "F"},
+			{"F","F","F", "W"},
+			{"F","F","F", "F"},
+			{"F","F","F", "F"}
+		};
+		
+		var world = new World(map);
+		
+		// height 3 for F, 0 for W 
+		
+		world.stepDistribute(2);
+		
+		assertEquals(3 + 2, world.getBiom(0, 3).getHeight());
+	}
+	
+	@Test
+	void test204Advanced4x4CenterIslandP2Height() {
+		var map = new String[][] {
+			{"W","W","W", "W"},
+			{"F","F","F", "W"},
+			{"W","F","F", "W"},
+			{"W","W","W", "W"},
+		};
+		
+		var world = new World(map);
+		
+		// height 3 for F, 0 for W 
+		
+		world.stepDistribute(2);
+		
+		assertEquals(3 + 3, world.getBiom(1, 2).getHeight());
+	}
+	
+	@Test
+	void test205Advanced4x4CenterIslandP2DistributeTwice() {
+		var map = new String[][] {
+			{"W","W","W", "W"},
+			{"F","F","F", "W"},
+			{"W","F","F", "W"},
+			{"W","W","W", "W"},
+		};
+		
+		var world = new World(map);
+		
+		// flora map initially
+		
+		// 15 15 15 15
+		// 12 12|12|15
+		// 15 12 12 15
+		// 15 15 15 15
+		
+		world.stepDistribute(2);
+		assertEquals(15 + 15 + 12 + 15 + 12 + 12, world.getBiom(1, 2).getFlora());
+		
+		var floraValues = new int[][] {
+			{57, 69, 69, 60},
+			{69, 81, 81, 69},
+			{66, 84, 84, 69},
+			{57, 69, 69, 60}
+		};
+		
+		assertArrayEquals(floraValues, actualFlora(world, floraValues.length));
+		
+		world.stepDistribute(2);
+		
+		assertEquals(69 + 69 + 84 + 69 + 81 + 69, world.getBiom(1, 2).getFlora());
+	}
+	
+	// b)/c)
+    @Test
+    public void test301AdvancedDryUpDistributeStableFlora() {
+        String[][] input = {
+            {"F", "F"},
+            {"F", "F"}
+        };
+
+        World w = new World(input);
+        w.stepDryUp();
+        w.stepDryUp();
+
+        int[][] expectedFlora = {
+            {6, 6},
+            {6, 6}
+        };
+
+        assertArrayEquals(input, actualBiomTypes(w, 2));
+        assertArrayEquals(expectedFlora, actualFlora(w, 2));
+
+        for (int i = 0; i < 5; ++i) {
+            w.stepDistribute(1);
+            w.stepDryUp();
+            w.stepDryUp();
+
+            assertArrayEquals(input, actualBiomTypes(w, 2));
+            assertArrayEquals(expectedFlora, actualFlora(w, 2));
+        }
+    }
+    
+    @Test
+    public void test302AdvancedDryUpDistributeStableHeight1() {
+        String[][] input = {
+            {"F", "F"},
+            {"F", "F"}
+        };
+
+        World w = new World(input);
+        w.stepDryUp();
+        w.stepDryUp();
+
+        int[][] expectedHeight = {
+            {1, 1},
+            {1, 1}
+        };
+
+        assertArrayEquals(input, actualBiomTypes(w, 2));
+        assertArrayEquals(expectedHeight, actualHeights(w, 2));
+
+        for (int i = 0; i < 5; ++i) {
+            w.stepDistribute(1);
+            w.stepDryUp();
+            w.stepDryUp();
+
+            assertArrayEquals(input, actualBiomTypes(w, 2));
+            assertArrayEquals(expectedHeight, actualHeights(w, 2));
+        }
+    }
+    
+    @Test
+    public void test303AdvancedDryUpDistributeStableHeight2() {
+        String[][] input = {
+            {"F", "F", "W", "W"},
+            {"F", "W", "W", "W"},
+            {"W", "F", "W", "F"},
+            {"F", "W", "F", "F"}
+        };
+
+        World w = new World(input);
+        w.stepDryUp();
+        w.stepDryUp();
+
+        int[][] expectedHeight = {
+            {1, 1, 0, 0},
+            {1, 0, 0, 0},
+            {0, 1, 0, 1},
+            {1, 0, 1, 1}
+        };
+
+        assertArrayEquals(input, actualBiomTypes(w, 4));
+        assertArrayEquals(expectedHeight, actualHeights(w, 4));
+
+        for (int i = 0; i < 5; ++i) {
+            w.stepDistribute(2);
+            w.stepDryUp();
+            w.stepDryUp();
+
+            assertArrayEquals(input, actualBiomTypes(w, 4));
+            assertArrayEquals(expectedHeight, actualHeights(w, 4));
+        }
+    }
+	
+	/** Helper methods **/
+	private static int[][] createIntArray(int size, int... contents) {
+        int[][] input = new int[size][size];
+        int counter = 0;
+        for (int row = 0; row < input.length; row++) {
+            for (int col = 0; col < input[row].length; col++) {
+                input[row][col] = contents[counter % contents.length];
+                counter = counter +1;
+            }
+        }
+        return input;
+    }
+	
+	private static void testAllConstructions(int n, boolean typesOnly) {
+        String[][] input = new String[n][n];
+        int[][] flora = new int[n][n];
+        int[][] heights = new int[n][n];
+
+        // Test all possible nxn configurations.
+        // The configurations are represented directly in i, by interpreting it as a bitset.
+        for (int i = 0; i < (1 << (n * n)); ++i) {
+            for (int x = 0; x < n; ++x) {
+                for (int y = 0; y < n; ++y) {
+                    boolean isWater = ((i >> (x * n + y)) & 1) == 0;
+                    input[x][y] = isWater ? "W" : "F";
+                    flora[x][y] = isWater ? 15 : 12;
+                    heights[x][y] = isWater ? 0 : 3;
+                }
+            }
+
+            World w = new World(input);
+
+            assertArrayEquals(input, actualBiomTypes(w, input.length));
+            if (typesOnly) continue;
+
+            assertArrayEquals(flora, actualFlora(w, flora.length));
+            assertArrayEquals(heights, actualHeights(w, heights.length));
+        }
+    }
+	
+	public static String[][] createInputArray(int size, String... bioms) {
+		List<String> biomList = List.of(bioms);
+		String[] biomArray = new String[biomList.size()];
+		biomList.toArray(biomArray);
+		String[][] input = new String[size][size];
+		int counter = 0;
+        for (int row = 0; row < input.length; row++) {
+            for (int col = 0; col < input[row].length; col++) {
+            	input[row][col] = biomArray[counter % biomArray.length];
+            	counter = counter +1;
+            }
+        }
+        return input;
+	}
+	
+	public static void testConstructionHelper(String[][] input, boolean typesOnly) {
+	    World w = new World(input);
+	    int[][] flora = new int[input.length][input[0].length];
+	    int[][] heights = new int[input.length][input[0].length];
+        for (int row = 0; row < input.length; row++) {
+            for (int col = 0; col < input[row].length; col++) {
+            	if (input[row][col] == "W") {
+	                flora[row][col] = 15;
+	                heights[row][col] = 0;
+            	} else {
+	                flora[row][col] = 12;
+	                heights[row][col] = 3;           		
+            	}
+            }
+        }
+	    assertArrayEquals(input, actualBiomTypes(w, input.length));
+	    if(typesOnly) return;
+	    assertArrayEquals(flora, actualFlora(w, flora.length));
+	    assertArrayEquals(heights, actualHeights(w, heights.length));
+	}
+	
+	public static String [][] actualBiomTypes(World w, int size) {
+		String [][] types = new String[size][size];
+        for(int i = 0; i < size; i++) {
+        	for(int j = 0; j < size; j++) {
+        		assertNotNull(w.getBiom(i, j));
+        		types[i][j] = w.getBiom(i, j).getBiomType();
+        	}
+        }
+        
+        return types;
+	}
+
+	public static int [][] actualFlora(World w, int size) {
+		int [][] flora = new int[size][size];
+        for(int i = 0; i < size; i++) {
+        	for(int j = 0; j < size; j++) {
+        		assertNotNull(w.getBiom(i, j));
+        		flora[i][j] = w.getBiom(i, j).getFlora();
+        	}
+        }
+        
+        return flora;
+	}
+	
+	public static int [][] actualHeights(World w, int size) {
+		int [][] height = new int[size][size];
+        for(int i = 0; i < size; i++) {
+        	for(int j = 0; j < size; j++) {
+        		assertNotNull(w.getBiom(i, j));
+        		height[i][j] = w.getBiom(i, j).getHeight();
+        	}
+        }
+        
+        return height;
+	}
+}

@@ -1,0 +1,408 @@
+NETHZ: jkuehne
+
+Total Points: 4.77
+Total Percentage: 95.45%
+
+Nontrivial Tests: 8
+Trivial Tests: 13
+
+compile errors: NO
+nondeterministic: NO
+timeout: NO
+
+test01BasicBalanceSet: PASS
+test02BasicNotRegisteredInGame: PASS
+test03BasicNegBetAmountExceeding: PASS
+test04BasicPosBetAmountExact: PASS
+test05BasicEvenResult: PASS
+test06BasicEvenDrawOdd: PASS
+test07BasicOddResult: PASS
+test08BasicOddDrawEven: PASS
+test09BasicNumberResult: PASS
+test10BasicNumberResultDifferent: PASS
+test11BasicAllInNumberLoss: PASS
+test12BasicNoBet: PASS
+test13BasicZeroBet: PASS
+test14AdvancedBettingALot: PASS
+test15AdvancedMultipleRounds: PASS
+test16AdvancedMultipleValidAndInvalidBetsForOneRound: FAIL
+test17AdvancedOnlyLastOne: PASS
+test18AdvancedOnlyOneRound: PASS
+test19AdvancedFullHouse: PASS
+test20AdvancedZeroIsNotEven: PASS
+test21AdvancedZeroIsNotOdd: PASS
+test22AdvancedBigRoundGiven: PASS
+
+
+Folgende Test-Datei wurde für die Bewertung verwendet:
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+
+public class RouletteTestGrading {
+	@Test
+	public void test01BasicBalanceSet() {
+		RPlayer alice = new RPlayer(123);
+		assertEquals(123, alice.getBalance());
+	}
+	
+	@Test
+	public void test02BasicNotRegisteredInGame() {
+		RPlayer alice = new RPlayer(200);
+		
+		Roulette r1 = new Roulette();
+		r1.register(alice);
+		alice.setNumber(10, 10);
+		
+		// play some different, empty game
+		Roulette r2 = new Roulette();
+		r2.force(10);
+		
+		// alice balance is not changed, she did not play (not registered) 
+		assertEquals(190, alice.getBalance());
+	}
+	
+	@Test
+	public void test03BasicNegBetAmountExceeding() {
+		RPlayer alice = new RPlayer(200);
+		
+		Roulette r = new Roulette();
+		r.register(alice);
+		var betSetSuccessfully = alice.setNumber(10, 1000);
+		
+		r.force(10);
+		
+		assertFalse(betSetSuccessfully);
+		assertEquals(200, alice.getBalance());
+	}
+	
+	@Test
+	public void test04BasicPosBetAmountExact() {
+		RPlayer alice = new RPlayer(200);
+		
+		Roulette r = new Roulette();
+		r.register(alice);
+		var betSetSuccessfully = alice.setNumber(10, 200);
+		
+		r.force(10);
+		
+		// bets that set balance = 0 are allowed 
+		assertTrue(betSetSuccessfully);
+	}
+	
+	@Test
+	public void test05BasicEvenResult() {
+		RPlayer alice = new RPlayer(200);
+		
+		Roulette r = new Roulette();
+		r.register(alice);
+		
+		alice.setEven(20); 
+		
+		r.force(10);
+				 
+		assertEquals(220, alice.getBalance());
+	}
+	
+	@Test
+	public void test06BasicEvenDrawOdd() {
+		RPlayer alice = new RPlayer(200);
+		
+		Roulette r = new Roulette();
+		r.register(alice);
+		
+		alice.setEven(20); 
+		
+		r.force(11);
+				 
+		assertEquals(180, alice.getBalance());
+	}
+	
+	@Test
+	public void test07BasicOddResult() {
+		RPlayer alice = new RPlayer(200);
+		
+		Roulette r = new Roulette();
+		r.register(alice);
+		
+		alice.setOdd(20); 
+		
+		r.force(11);
+				 
+		assertEquals(220, alice.getBalance());
+	}
+	
+	@Test
+	public void test08BasicOddDrawEven() {
+		RPlayer alice = new RPlayer(200);
+		
+		Roulette r = new Roulette();
+		r.register(alice);
+		
+		alice.setOdd(20); 
+		
+		r.force(10);
+				 
+		assertEquals(180, alice.getBalance());
+	}
+	
+	@Test
+	public void test09BasicNumberResult() {
+		RPlayer alice = new RPlayer(200);
+		
+		Roulette r = new Roulette();
+		r.register(alice);
+		
+		alice.setNumber(36, 1); 
+		
+		r.force(36);
+				 
+		assertEquals(200 + 35 * 1, alice.getBalance());
+	}
+	
+	@Test
+	public void test10BasicNumberResultDifferent() {
+		RPlayer alice = new RPlayer(200);
+		
+		Roulette r = new Roulette();
+		r.register(alice);
+		
+		alice.setNumber(36, 1); 
+		
+		r.force(37);
+				 
+		assertEquals(200 - 1, alice.getBalance());
+	}
+	
+	@Test
+	public void test11BasicAllInNumberLoss() {
+		RPlayer alice = new RPlayer(200);
+		
+		Roulette r = new Roulette();
+		r.register(alice);
+		
+		alice.setNumber(36, 200); 
+		
+		r.force(35); // close 
+				 
+		assertEquals(0, alice.getBalance());
+		
+		var anotherBetSetResult = alice.setNumber(36, 10);
+		
+		assertFalse(anotherBetSetResult); // balance is already 0
+		
+		r.force(36);
+		
+		assertEquals(0, alice.getBalance());
+	}
+	
+	@Test
+	public void test12BasicNoBet() {
+		RPlayer alice = new RPlayer(200);
+		
+		Roulette r1 = new Roulette();
+		r1.force(10);
+		
+		assertEquals(200, alice.getBalance());
+	}
+	
+	@Test
+	public void test13BasicZeroBet() {
+		RPlayer alice = new RPlayer(200);
+		
+		Roulette r1 = new Roulette();
+		alice.setNumber(10, 0);
+		assertEquals(200, alice.getBalance());
+		
+		r1.force(10);
+		
+		assertEquals(200, alice.getBalance());
+	}
+	
+	@Test
+	public void test14AdvancedBettingALot() {
+		RPlayer alice = new RPlayer(200);
+		
+		Roulette r = new Roulette();
+		r.register(alice);
+		
+		alice.setNumber(10, 20); // 180
+		alice.setNumber(10, 20); // 160
+		alice.setNumber(10, 20); // 140
+		alice.setNumber(10, 20); // 120
+		alice.setNumber(10, 20); // 100
+		alice.setNumber(10, 20); // 80
+		alice.setNumber(10, 20); // 60
+		alice.setNumber(10, 20); // 40
+		alice.setNumber(10, 20); // 20
+		
+		var stillPossibleBetResult = alice.setNumber(10, 20); // 0
+		var exceedingBetResult = alice.setNumber(10, 20); // -20
+		var zeroBet = alice.setNumber(10, 0);
+				 
+		assertTrue(stillPossibleBetResult);
+		assertFalse(exceedingBetResult);
+		assertTrue(zeroBet);
+	}
+	
+	@Test
+	public void test15AdvancedMultipleRounds() {
+		RPlayer alice = new RPlayer(200);
+		
+		Roulette r = new Roulette();
+		r.register(alice);
+		
+		// round 1
+		alice.setNumber(36, 1); 
+		r.force(36);
+		
+		// round 2
+		alice.setOdd(200);
+		r.force(1);
+				 
+		assertEquals(435, alice.getBalance());
+	}
+	
+	@Test
+	public void test16AdvancedMultipleValidAndInvalidBetsForOneRound() {
+		Roulette r1 = new Roulette();
+		RPlayer alice = new RPlayer(200);
+		
+		r1.register(alice);
+		alice.setEven(50); // 150
+		alice.setEven(100); // 50
+		alice.setOdd(25); // 25
+		alice.setOdd(30); // invalid
+		r1.force(13);
+		
+		assertEquals(25 + 2*25, alice.getBalance());
+	}
+	
+	@Test
+	public void test17AdvancedOnlyLastOne() {
+		RPlayer alice = new RPlayer(200);
+		
+		Roulette r = new Roulette();
+		r.register(alice);
+		
+		alice.setNumber(36, 100);
+		// alice changes their mind
+		alice.setNumber(35, 100);
+		
+		r.force(36);
+		assertEquals(0, alice.getBalance());
+	}
+	
+	@Test
+	public void test18AdvancedOnlyOneRound() {
+		RPlayer alice = new RPlayer(200);
+		
+		Roulette r = new Roulette();
+		r.register(alice);
+		
+		alice.setNumber(36, 200);
+		// round 1
+		r.force(35); // close
+		// round 2
+		r.force(36); // would have won here
+		
+		// but alice bet in the first round only 
+		assertEquals(0, alice.getBalance());
+	}
+	
+	@Test
+	public void test19AdvancedFullHouse() {
+		Roulette r = new Roulette();
+		
+		RPlayer[] players = new RPlayer[10];
+		int[] playerBalances = new int[] {1,2,3,4,5,6,7,8,9,10}; 
+		for (int i=0; i<10; i++) {
+			players[i] = new RPlayer(playerBalances[i]);
+			r.register(players[i]);
+			// everyone sets their whole balance on their index number
+			players[i].setNumber(i, playerBalances[i]);
+		}
+		
+		r.force(5); // only player at index 5, with bet of 6 wins
+		
+		for (int i=0; i<10; i++) {
+			if (i == 5) {
+				assertEquals(36 * playerBalances[i], players[i].getBalance());
+			} else {
+				assertEquals(0, players[i].getBalance());
+			}
+		}
+	}
+	
+	@Test
+	public void test20AdvancedZeroIsNotEven() {
+		RPlayer alice = new RPlayer(200);
+		
+		Roulette r1 = new Roulette();
+		r1.register(alice);
+		alice.setEven(10);
+		
+		r1.force(0);
+		
+		assertEquals(190, alice.getBalance());
+	}
+	
+	@Test
+	public void test21AdvancedZeroIsNotOdd() {
+		RPlayer alice = new RPlayer(200);
+		
+		Roulette r1 = new Roulette();
+		r1.register(alice);
+		alice.setOdd(10);
+		
+		r1.force(0);
+		
+		assertEquals(190, alice.getBalance());
+	}
+	
+	@Test
+	public void test22AdvancedBigRoundGiven() {
+		RPlayer alice = new RPlayer(200);
+		RPlayer bob = new RPlayer(100);
+		
+		Roulette r1 = new Roulette();
+		r1.register(alice);
+		
+		// Eine Runde Roulette wird gespielt wobei 12 ausgewaehlt wird
+		r1.force(12);
+		
+		// Alice hatte noch keine Wette gesetzt
+		assertEquals(200, alice.getBalance());
+		assertEquals(100, bob.getBalance());
+		
+		r1.register(bob);
+		
+		// Alice und Bob setzen Wetten
+		alice.setNumber(9, 10);
+		assertEquals(190, alice.getBalance());
+		
+		bob.setNumber(4, 20);
+		assertEquals(80, bob.getBalance());
+		
+		// Eine Runde Roulette wird gespielt wobei 9 ausgewaehlt wird
+		r1.force(9);
+		
+		// Alice hat 369 gewonnen und Bob hat nichts gewonnen
+		assertEquals(550, alice.getBalance());
+		assertEquals(80, bob.getBalance());
+		
+		// Bob setzt eine neue Wette (Alice setzt keine Wette)
+		bob.setOdd(80);
+		assertEquals(0, bob.getBalance());
+			
+		// Eine Runde Roulette wird gespielt wobei 9 ausgewaehlt wird
+		r1.force(9);
+				
+		// Bob 160 gewonnen und Alice hatte keine Wette bestaetigt
+		assertEquals(550, alice.getBalance());
+		assertEquals(160, bob.getBalance());
+	}
+}

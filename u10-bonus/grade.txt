@@ -1,0 +1,334 @@
+NETHZ: jkuehne
+
+Total points: 5
+
+compiled: YES
+compile errors: NO
+nondeterministic: NO
+
+test01: PASS
+test02: PASS
+test03: PASS
+test04: PASS
+test05: PASS
+test06: PASS
+test07: PASS
+test08a: PASS
+test08b: PASS
+test09: PASS
+test10: PASS
+test11: PASS
+test12: PASS
+test13: PASS
+
+
+Folgende Test-Datei wurde für die Bewertung verwendet:
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+
+import org.junit.jupiter.api.Test;
+
+public class GradingIsSubProgramTest {
+	
+	@Test
+	public void test01() {
+		Node m1 = Node.newAddNode(2);
+		
+		assertTrue(GraphExecution.isSubProgram(m1, Node.newAddNode(2)));
+		assertFalse(GraphExecution.isSubProgram(m1, Node.newAddNode(3)));
+	}
+	
+	@Test
+	public void test02() {
+		Node m1 = Node.newSeqNode(new Node[] {Node.newAddNode(101), Node.newAddNode(21), Node.newAddNode(30), Node.newAddNode(51), Node.newAddNode(38), Node.newAddNode(59)});
+		
+		assertTrue(GraphExecution.isSubProgram(m1, Node.newSeqNode(new Node[] {Node.newAddNode(101), Node.newAddNode(21), Node.newAddNode(30), Node.newAddNode(51), Node.newAddNode(38), Node.newAddNode(59)})));
+		assertFalse(GraphExecution.isSubProgram(m1, Node.newSeqNode(new Node[] {Node.newAddNode(101), Node.newAddNode(21)})));
+	}
+	
+	@Test
+	public void test03() {
+		Node m1 = Node.newSeqNode(new Node[] {Node.newAddNode(101), Node.newAddNode(21), Node.newAddNode(30), Node.newAddNode(51), Node.newAddNode(38), Node.newAddNode(59)});
+		
+		assertTrue(GraphExecution.isSubProgram(m1, Node.newSeqNode(new Node[] {Node.newAddNode(101), Node.newAddNode(21), Node.newAddNode(30), Node.newAddNode(51), Node.newAddNode(38), Node.newAddNode(59)})));
+		assertFalse(GraphExecution.isSubProgram(m1, Node.newSeqNode(new Node[] {Node.newAddNode(101), Node.newAddNode(21), Node.newAddNode(30), Node.newAddNode(51), Node.newAddNode(41), Node.newAddNode(59)})));
+	}
+	
+	
+	@Test
+	public void test04() {
+		Node m1 = graph1();
+		
+		{
+			Node other = Node.newSeqNode(new Node [] {
+							Node.newSeqNode(new Node [] { Node.newAddNode(3), Node.newAddNode(4) }),
+							Node.newAddNode(5)
+						});
+			
+			assertTrue(GraphExecution.isSubProgram(m1, other));
+		}
+		
+		{
+			Node otherFalse = Node.newSeqNode(new Node [] {
+					Node.newSeqNode(new Node [] { Node.newAddNode(5), Node.newAddNode(7) }),
+					Node.newAddNode(9)
+				});
+			
+			assertFalse(GraphExecution.isSubProgram(m1, otherFalse));
+		}
+	}
+	
+	@Test
+	public void test05() {
+		Node m1 = graph1();
+		
+		{
+			Node other = Node.newSeqNode(new Node [] { Node.newAddNode(3), Node.newAddNode(4) });
+			assertTrue(GraphExecution.isSubProgram(m1, other));
+		}		
+
+		{
+			Node otherFalse = Node.newSeqNode(new Node [] { Node.newAddNode(200), Node.newAddNode(300) });
+			assertFalse(GraphExecution.isSubProgram(m1, otherFalse));
+		}
+	}
+	
+	@Test
+	public void test06() {
+		Node m1 = graph1();
+
+		{
+			assertTrue(GraphExecution.isSubProgram(m1, Node.newAddNode(5)));
+		}
+
+		{
+			assertFalse(GraphExecution.isSubProgram(m1, Node.newAddNode(400)));
+		}
+	}
+	
+	
+	@Test
+	public void test07() {
+		Node m1 = graph2();
+		
+		{
+			Node other1 = Node.newSeqNode(new Node [] { Node.newAddNode(0), Node.newAddNode(5) });
+			assertTrue(GraphExecution.isSubProgram(m1, other1));
+		}
+		
+		{
+			Node other2 = Node.newSeqNode(new Node [] { Node.newAddNode(5), Node.newAddNode(0) });
+			assertTrue(GraphExecution.isSubProgram(m1, other2));
+		}
+		
+		{
+			Node otherFalse = Node.newSeqNode(new Node [] { Node.newAddNode(1), Node.newAddNode(3) });
+			assertFalse(GraphExecution.isSubProgram(m1, otherFalse));
+		}
+	}
+	
+	@Test
+	public void test08a() {
+		Node m1 = graph2();
+		
+		{
+			Node other = Node.newSeqNode(new Node [] { Node.newAddNode(2), Node.newAddNode(4), Node.newAddNode(8) });
+			assertTrue(GraphExecution.isSubProgram(m1, other));
+		}
+		
+		{
+			Node otherFalse = Node.newSeqNode(new Node [] { Node.newAddNode(2), Node.newAddNode(4), Node.newAddNode(8), Node.newAddNode(16) });
+			assertFalse(GraphExecution.isSubProgram(m1, otherFalse));
+		}
+	}
+	
+	@Test
+	public void test08b() {
+		Node m1 = graph2();
+		
+		{
+			Node other = Node.newSeqNode(new Node [] { Node.newAddNode(8), Node.newAddNode(2), Node.newAddNode(4) });
+			assertTrue(GraphExecution.isSubProgram(m1, other));
+		}
+		
+		{
+			Node otherFalse = Node.newSeqNode(new Node [] { Node.newAddNode(49), Node.newAddNode(50), Node.newAddNode(51) });
+			assertFalse(GraphExecution.isSubProgram(m1, otherFalse));
+		}
+	}
+	
+	@Test
+	public void test09() {
+		Node m1 = graph2();
+
+		{
+			Node other = Node.newSeqNode(new Node [] {
+									Node.newSeqNode( new Node [] { Node.newAddNode(5), Node.newAddNode(0) } ),
+									Node.newSeqNode( new Node [] { Node.newAddNode(2), Node.newAddNode(4), Node.newAddNode(8) } )
+						 });
+			
+			assertTrue(GraphExecution.isSubProgram(m1, other));
+		}
+		
+		{
+			Node otherFalse = Node.newSeqNode(new Node [] {
+								Node.newSeqNode( new Node [] { Node.newAddNode(300), Node.newAddNode(300), Node.newAddNode(300) } ),
+								Node.newSeqNode( new Node [] { Node.newAddNode(400), Node.newAddNode(400) } )
+						      });
+			
+			
+			assertFalse(GraphExecution.isSubProgram(m1, otherFalse));
+		}		
+	}
+	
+	@Test
+	public void test10() {
+		Node m1 = graph2();
+
+		{
+			Node other =
+					Node.newSeqNode(new Node [] {
+							Node.newSeqNode( new Node [] { Node.newAddNode(2), Node.newAddNode(8), Node.newAddNode(4) } ),
+							Node.newSeqNode( new Node [] { Node.newAddNode(0), Node.newAddNode(5) } )
+					});
+			assertTrue(GraphExecution.isSubProgram(m1, other));
+		}
+		
+		{
+			Node otherFalse = 	
+						Node.newSeqNode(new Node [] {
+								Node.newSeqNode( new Node [] { Node.newAddNode(100), Node.newAddNode(200), Node.newAddNode(300) } ),
+								Node.newSeqNode( new Node [] { Node.newAddNode(0), Node.newAddNode(5) } )
+						});
+			
+			assertFalse(GraphExecution.isSubProgram(m1, otherFalse));
+		}
+		
+	}
+	
+	@Test	
+	public void test11() {
+		Node m1 = graph3();
+		
+		assertTrue(GraphExecution.isSubProgram(m1, Node.newAddNode(0)));
+		assertFalse(GraphExecution.isSubProgram(m1, Node.newAddNode(1000)));
+	}
+	
+	@Test
+	public void test12() {
+		Node m1 = graph3();
+		
+		{
+			Node other = 
+				Node.newSeqNode( new Node[] {
+					Node.newSeqNode( new Node [] {
+							Node.newAddNode(24),
+							Node.newAddNode(21),
+							Node.newSeqNode(new Node [] { Node.newAddNode(1), Node.newAddNode(0) })
+					})
+				});
+			
+			assertTrue(GraphExecution.isSubProgram(m1, other));
+		}
+		
+		{
+			Node otherFalse = 
+					Node.newSeqNode( new Node[] {
+							Node.newSeqNode( new Node [] {
+									Node.newAddNode(24),
+									Node.newAddNode(25),
+									Node.newSeqNode(new Node [] { Node.newAddNode(1), Node.newAddNode(0) })
+							})
+						});
+				
+				assertFalse(GraphExecution.isSubProgram(m1, otherFalse));
+		}
+	}
+	
+	@Test
+	public void test13() {
+		Node m1 = graph3();
+
+		{	
+			Node other =
+				Node.newSeqNode( new Node[] {
+						Node.newAddNode(6),
+						Node.newAddNode(5),
+						Node.newAddNode(7)
+				});
+			
+			assertTrue(GraphExecution.isSubProgram(m1, other));
+		}
+		
+		{	
+			Node otherFalse =
+				Node.newSeqNode( new Node [] {		
+						Node.newSeqNode( new Node[] {
+								Node.newAddNode(9),
+								Node.newAddNode(10),
+								Node.newAddNode(11)
+						})	
+				});
+			
+			assertFalse(GraphExecution.isSubProgram(m1, otherFalse));
+		}
+	}
+
+
+	
+	public Node graph1() {		
+		Node m9 = Node.newAddNode(6);
+		Node m5 = Node.newSeqNode(new Node [] {m9});		
+		
+		Node m8 = Node.newAddNode(5);
+		
+		Node m11 = Node.newAddNode(4);
+		Node m10 = Node.newAddNode(3);
+		Node m7 = Node.newSeqNode(new Node [] {m10, m11});
+		
+		Node m4 = Node.newSeqNode(new Node [] {m7, m8});
+		
+		Node m3 = Node.newAddNode(2);
+		
+		Node m6 = Node.newAddNode(1);
+		Node m2 = Node.newSeqNode(new Node [] {m6} );
+		Node m1 = Node.newSeqNode(new Node[] {m2, m3, m4, m5});
+		
+		return m1;		
+	}
+	
+	public Node graph2() {
+		return Node.newSeqNode(new Node [] {
+						Node.newSeqNode( new Node [] { Node.newAddNode(5), Node.newAddNode(0) } ),
+						Node.newSeqNode( new Node [] { Node.newAddNode(2), Node.newAddNode(4), Node.newAddNode(8) } )
+				});
+	}
+	
+	public Node graph3() {
+		return 
+			Node.newSeqNode( new Node[] {
+				Node.newAddNode(15),
+				
+				Node.newSeqNode( new Node [] {
+						Node.newSeqNode( new Node[] {
+								Node.newSeqNode( new Node [] {
+										Node.newAddNode(21),
+										Node.newAddNode(24),
+										Node.newSeqNode(new Node [] { Node.newAddNode(0), Node.newAddNode(1) })
+								})
+						}),
+						
+						Node.newAddNode(1),
+						
+						Node.newSeqNode( new Node[] {
+								Node.newAddNode(5),
+								Node.newAddNode(6),
+								Node.newAddNode(7)
+						})	
+				})
+			});			
+	}
+
+}

@@ -1,0 +1,372 @@
+NETHZ: jkuehne
+
+Total Points: 4.58
+Total Percentage: 87.50%
+
+Nontrivial Tests: 12
+Trivial Tests: 10
+
+compile errors: NO
+timeout: NO
+testAdvanced10EdgeCasesContainsWaves: PASS
+testAdvanced11EdgeCasesZeroWaves: PASS
+testAdvanced1WaveWithBorder: PASS
+testAdvanced2WaveWithBorder: PASS
+testAdvanced3SquigglyWave: PASS
+testAdvanced4RowColumnConflict: PASS
+testAdvanced5RowColumnConflict: PASS
+testAdvanced6FalseWaves1: PASS
+testAdvanced6FalseWaves2: PASS
+testAdvanced7WaveBig1: PASS
+testAdvanced8WaveBig2: PASS
+testAdvanced9EdgeCasesContainsWaves1: PASS
+testBasic10WaveGivenPart1: PASS
+testBasic11WaveGivenPart2: PASS
+testBasic1WaveSimpleNoBorder1: PASS
+testBasic2WaveSimpleNoBorder2: PASS
+testBasic3WaveSimpleNoBorder3: PASS
+testBasic4WaveSimpleNoBorder4: PASS
+testBasic5WaveSimpleWithBorder1: PASS
+testBasic6WaveSimpleWithBorder2: FAIL
+testBasic7ColumnConflict: PASS
+testBasic8RowConflict: PASS
+testBasic9RowConflict: PASS
+
+
+
+Folgende Test-Datei wurde für die Bewertung verwendet:
+
+WavesTestV3.java
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
+
+public class WavesTestV3 {
+
+
+	@Test
+	public void testBasic1WaveSimpleNoBorder1() {
+		assertEquals(1, Waves.waves(new int[][] {
+			{0, 0, 1, 0, 0},
+			{0, 0, 1, 0, 0},
+			{0, 0, 1, 0, 0},
+			{0, 0, 1, 0, 0},
+			{0, 0, 1, 0, 0}
+		}));
+	}
+
+	@Test
+	public void testBasic2WaveSimpleNoBorder2() {
+		assertEquals(1, Waves.waves(new int[][] {
+			{0, 0, 1, 0, 0},
+			{0, 0, 1, 0, 0},
+			{0, 0, 1, 1, 1},
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0}
+		}));
+	}
+
+	@Test
+	public void testBasic3WaveSimpleNoBorder3() {
+		assertEquals(1, Waves.waves(new int[][] {
+			{0, 1, 0, 0, 0},
+			{0, 1, 1, 0, 0},
+			{0, 0, 1, 1, 1},
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0}
+		}));
+	}
+
+	@Test
+	public void testBasic4WaveSimpleNoBorder4() {
+		assertEquals(1, Waves.waves(new int[][] {
+			{0, 1, 0, 0, 0},
+			{0, 1, 1, 0, 0},
+			{0, 0, 1, 1, 0},
+			{0, 0, 0, 1, 0},
+			{0, 0, 0, 1, 0}
+		}));
+	}
+
+
+	@Test
+	public void testBasic5WaveSimpleWithBorder1() {
+		assertEquals(1, Waves.waves(new int[][] {
+			{0, 0, 1, 0, 0},
+			{0, 0, 1, 0, 0},
+			{0, 0, 1, 0, 0},
+			{0, 0, 1, 0, 0},
+			{0, 0, 1, 1, 1}
+		}));
+	}
+
+	@Test
+	public void testBasic6WaveSimpleWithBorder2() {
+		assertEquals(1, Waves.waves(new int[][] {
+			{0, 0, 1, 0, 1},
+			{0, 0, 1, 0, 1},
+			{0, 0, 1, 1, 1},
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0}
+		}));
+	}
+
+	@Test
+	public void testBasic7ColumnConflict() {
+		assertEquals(1, Waves.waves(new int[][] {
+			{2, 3, 4, 5, 6},
+			{2, 3, 4, 5, 6},
+			{2, 3, 4, 5, 6},
+			{2, 3, 4, 5, 6},
+			{2, 3, 4, 5, 6}
+		}));
+	}
+
+
+	@Test
+	public void testBasic8RowConflict() {
+		assertEquals(1, Waves.waves(new int[][] {
+			{2, 2, 2, 2, 2},
+			{3, 3, 3, 3, 3},
+			{4, 4, 4, 4, 4},
+			{5, 5, 5, 5, 5},
+			{6, 6, 6, 6, 6}
+		}));
+	}
+
+	@Test
+	public void testBasic9RowConflict() {
+		assertEquals(1, Waves.waves(new int[][] {
+			{2, 2, 2, 2, 2},
+			{3, 3, 3, 3, 3},
+			{4, 4, 4, 4, 4},
+			{3, 3, 3, 3, 3},
+			{2, 2, 2, 2, 2}
+		}));
+	}
+
+	@Test
+	public void testBasic10WaveGivenPart1() {
+
+		assertEquals(3, Waves.waves(new int[][] {
+			{1, 0, 1, 0, 1, 0},
+			{1, 0, 1, 0, 1, 0},
+			{1, 0, 1, 0, 1, 1},
+			{0, 0, 1, 1, 0, 0},
+			{1, 1, 0, 1, 1, 0},
+			{0, 1, 0, 0, 1, 0},
+		}));
+
+		assertEquals(1, Waves.waves(new int[][] {
+			{0, 0, 1, 1, 0},
+			{0, 0, 0, 1, 1},
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0},
+		}));
+	}
+
+	@Test
+	public void testBasic11WaveGivenPart2() {
+		assertEquals(1, Waves.waves(new int[][] {
+			{0, 0, 0, 1, 0},
+			{0, 0, 0, 1, 1},
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0},
+		}));
+
+		assertEquals(1, Waves.waves(new int[][] {
+			{0, 0, 1, 5, 4},
+			{0, 0, 2, 5, 5},
+			{0, 0, 3, 3, 0},
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0},
+		}));
+
+		assertEquals(0, Waves.waves(new int[][] {
+			{0, 1, 0, 0, 0},
+			{1, 1, 0, 0, 0},
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 1, 1},
+			{0, 0, 0, 1, 0},
+		}));
+	}
+
+	@Test
+	public void testAdvanced1WaveWithBorder() {
+		assertEquals(2, Waves.waves(new int[][] {
+			{2, 2, 2, 2, 2},
+			{0, 0, 1, 0, 0},
+			{3, 0, 1, 0, 0},
+			{3, 0, 1, 0, 0},
+			{3, 0, 1, 1, 1}
+		}));
+
+	}
+
+	@Test
+	public void testAdvanced2WaveWithBorder() {
+
+		assertEquals(2, Waves.waves(new int[][] {
+			{2, 0, 3, 0, 0},
+			{2, 0, 3, 3, 0},
+			{2, 0, 1, 3, 3},
+			{2, 2, 0, 0, 3},
+			{0, 2, 2, 0, 3}
+		}));
+	}
+
+	@Test
+	public void testAdvanced3SquigglyWave() {
+
+		assertEquals(1, Waves.waves(new int[][] {
+			{0, 1, 0, 0, 0},
+			{0, 1, 1, 0, 0},
+			{0, 0, 1, 1, 0},
+			{0, 0, 0, 1, 1},
+			{0, 0, 0, 0, 1}
+		}));
+	}
+
+	@Test
+	public void testAdvanced4RowColumnConflict() {
+		assertEquals(0, Waves.waves(new int[][] {
+			{0, 0, 0, 1, 0, 0, 0},
+			{0, 0, 0, 1, 0, 0, 0},
+			{0, 0, 0, 1, 0, 0, 0},
+			{1, 1, 1, 1, 1, 1, 1},
+			{0, 0, 0, 1, 0, 0, 0},
+			{0, 0, 0, 1, 0, 0, 0},
+			{0, 0, 0, 1, 0, 0, 0}
+		}));
+	}
+
+	@Test
+	public void testAdvanced5RowColumnConflict() {
+		assertEquals(0, Waves.waves(new int[][] {
+			{0, 1, 0, 1, 0, 0, 0},
+			{0, 1, 0, 1, 0, 0, 0},
+			{0, 1, 0, 1, 0, 0, 0},
+			{1, 1, 1, 1, 1, 1, 1},
+			{0, 1, 0, 1, 0, 0, 0},
+			{0, 1, 0, 1, 0, 0, 0},
+			{0, 1, 0, 1, 0, 0, 0}
+		}));
+	}
+
+	@Test
+	public void testAdvanced6FalseWaves1() {
+		assertEquals(0, Waves.waves(new int[][] {
+			{0, 0, 0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 1, 1, 1},
+			{0, 0, 0, 0, 1, 0, 0},
+			{0, 0, 0, 0, 1, 0, 0}
+		}));
+	}
+
+	@Test
+	public void testAdvanced6FalseWaves2() {
+		assertEquals(0, Waves.waves(new int[][] {
+			{0, 0, 0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0, 0, 0},
+			{0, 0, 1, 1, 1, 1, 1},
+			{0, 0, 1, 0, 0, 0, 0},
+			{0, 0, 1, 0, 0, 0, 0},
+			{0, 0, 1, 0, 0, 0, 0},
+			{0, 0, 1, 0, 0, 0, 0}
+		}));
+	}
+
+	@Test
+	public void testAdvanced7WaveBig1() {
+
+		assertEquals(1, Waves.waves(new int[][] {
+			{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0},
+			{0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0},
+			{0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0},
+			{0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0},
+			{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
+			{0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0},
+			{0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1},
+			{0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0},
+			{0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0},
+			{0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0},
+			{0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		}));
+	}
+
+	@Test
+	public void testAdvanced8WaveBig2() {
+		assertEquals(1, Waves.waves(new int[][] {
+			{2, 0, 0, 0, 3, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0},
+			{2, 2, 2, 0, 3, 0, 1, 1, 1, 1, 3, 0, 0, 0, 0},
+			{0, 0, 2, 0, 3, 0, 3, 3, 3, 3, 3, 0, 2, 2, 2},
+			{0, 0, 2, 0, 3, 3, 3, 0, 0, 1, 1, 1, 2, 0, 0},
+			{0, 0, 2, 0, 0, 1, 1, 2, 2, 2, 2, 1, 2, 0, 0},
+			{0, 0, 2, 2, 2, 2, 0, 2, 0, 1, 2, 1, 2, 0, 0},
+			{0, 0, 0, 0, 0, 2, 1, 2, 1, 1, 2, 1, 2, 0, 0},
+			{0, 2, 2, 2, 0, 2, 0, 2, 0, 0, 2, 1, 2, 0, 0},
+			{0, 2, 0, 2, 0, 2, 1, 2, 2, 1, 2, 1, 2, 0, 0},
+			{0, 2, 0, 2, 2, 2, 0, 0, 2, 1, 2, 1, 2, 1, 1},
+			{0, 2, 0, 0, 1, 0, 0, 0, 2, 1, 2, 1, 2, 1, 0},
+			{0, 2, 2, 0, 1, 1, 1, 0, 2, 0, 2, 0, 2, 1, 0},
+			{0, 0, 2, 0, 0, 0, 1, 0, 2, 0, 2, 1, 2, 1, 0},
+			{0, 0, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 0, 0},
+			{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		}));
+	}
+
+	@Test
+	public void testAdvanced9EdgeCasesContainsWaves1() {
+		assertEquals(1, Waves.waves(new int[][] {
+			{Integer.MAX_VALUE}
+		}));
+
+		assertEquals(1, Waves.waves(new int[][] {
+			{Integer.MIN_VALUE}
+		}));
+	}
+
+
+	@Test
+	public void testAdvanced10EdgeCasesContainsWaves() {
+
+		assertEquals(1, Waves.waves(new int[][] {
+			{0, 0, 1, 1, 0},
+			{0, 0, 0, 1, 1},
+			{0, 0, 0, 0, 1},
+			{1, 1, 1, 1, 1},
+			{1, 0, 0, 0, 0}
+		}));
+	}
+
+	@Test
+	public void testAdvanced11EdgeCasesZeroWaves() {
+
+		assertEquals(0, Waves.waves(new int[][] {
+			{1, 1, 1},
+			{1, 1, 1},
+			{1, 1, 1}
+		}));
+	}
+
+	public void testAdvanced12BorderWave() {
+		assertEquals(1, Waves.waves(new int[][] {
+			{1, 1, 1, 1, 1, 1, 1},
+			{1, 0, 0, 0, 0, 0, 1},
+			{1, 0, 0, 0, 0, 0, 1},
+			{1, 0, 0, 0, 0, 0, 1},
+			{1, 0, 0, 0, 0, 0, 1},
+			{1, 0, 0, 0, 0, 0, 1},
+			{1, 0, 1, 1, 1, 1, 1}
+		}));
+	}
+}

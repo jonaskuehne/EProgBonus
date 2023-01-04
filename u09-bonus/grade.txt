@@ -1,0 +1,326 @@
+NETHZ: jkuehne
+
+Total Points: 5.00
+Total Percentage: 100.00%
+
+Nontrivial Tests: 8
+Trivial Tests: 0
+
+compile errors: NO
+nondeterministic: NO
+timeout: NO
+
+test1OutputPt1: PASS
+test2OutputPt2: PASS
+test3OutputPt3: PASS
+test4SubtypeAZ: PASS
+test5SubtypeBA: PASS
+test6SubtypeCD: PASS
+test7SubtypeDA: PASS
+test8UnchangedPrintStmts: PASS
+
+
+Folgende Test-Datei wurde für die Bewertung verwendet:
+
+import static java.util.Arrays.stream;
+import static java.util.stream.IntStream.range;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Objects;
+import java.util.stream.Stream;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+
+public class GradingKlassenTest {
+    private URLClassLoader classLoader;
+
+    @Test
+	public void test1OutputPt1() {
+    	int start = 0;
+    	int limit = 3;
+    	
+		assertEqualOutputLines(start, limit);
+	}
+    
+    @Test
+	public void test2OutputPt2() {
+    	int start = 3;
+    	int limit = 6;
+    	
+		assertEqualOutputLines(start, limit);
+	}
+    
+    @Test
+	public void test3OutputPt3() {
+    	int start = 6;
+    	int limit = 10;
+    	
+		assertEqualOutputLines(start, limit);
+	}
+
+	private void assertEqualOutputLines(int start, int limit) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		PrintStream output = new PrintStream(baos);
+		
+		Klassen.klassen(output);
+		String[] actual = baos.toString().split("\n");
+		
+		output.close();
+		
+		String[] expected = new String[] { "Hello"
+				, "Bingo"
+				, "++"
+				, "Hello"
+				, "++"
+				, "C.foo():"
+				, "Here"
+				, "--"
+				, "Found"
+		};
+		
+		for (int i=start;i<Math.min(limit, expected.length); i++) {
+			assertTrue(actual.length > i);
+			assertEquals(expected[i], actual[i], "line " + i + " of the output must match");
+		}
+	}
+    
+    /**
+     * Creates a new class loader for each test, to ensure that static fields are
+     * reinitialized.
+     */
+    @BeforeEach
+    public void initializeClassLoader() {
+        URL[] urls = { Klassen.class.getProtectionDomain()
+                .getCodeSource().getLocation() };
+        classLoader = new URLClassLoader(urls, null);
+    }
+    
+    /** Test assignments **/
+    @Test
+    public void test4SubtypeAZ() {
+    	try {
+    		assertTrue(Z().isAssignableFrom(A()));
+    	} catch(ReflectiveOperationException e) {
+    		throw new AssertionError(e);
+    	}
+    }
+    
+    @Test
+    public void test5SubtypeBA() {
+    	try {
+    		assertTrue(A().isAssignableFrom(B()));
+    	} catch(ReflectiveOperationException e) {
+    		throw new AssertionError(e);
+    	}
+    }
+    
+    @Test
+    public void test6SubtypeCD() {
+    	try {
+    		assertTrue(D().isAssignableFrom(C()));
+    	} catch(ReflectiveOperationException e) {
+    		throw new AssertionError(e);
+    	}
+    }
+    
+    @Test
+    public void test7SubtypeDA() {
+    	try {
+    		assertTrue(A().isAssignableFrom(D()));
+    	} catch(ReflectiveOperationException e) {
+    		throw new AssertionError(e);
+    	}
+    }
+    
+    @Test
+    public void test8UnchangedPrintStmts() {
+    	subtestAFooA();
+    	subtestFooC();
+    	subtestBarB();
+    	subtestBarZ();
+    }
+    
+    /** test foo methods **/
+    public void subtestAFooA() {
+    	try {
+    		var a = create(A());
+    		
+    		var buffer = new ByteArrayOutputStream();
+            PrintStream ps = new PrintStream(buffer);
+            invoke(a, "foo", ps);
+            assertEquals("Found\n", buffer.toString());    		
+    	} catch(ReflectiveOperationException e) {
+    		throw new AssertionError(e);
+    	}
+    }
+    
+    public void subtestFooC() {
+    	try {
+    		var c = create(C());
+    		
+    		var buffer = new ByteArrayOutputStream();
+            PrintStream ps = new PrintStream(buffer);
+            invoke(c, "foo", ps);
+            assertEquals("Here\n", buffer.toString());    		
+    	} catch(ReflectiveOperationException e) {
+    		throw new AssertionError(e);
+    	}
+    }
+    
+    public void subtestBarB() {
+    	try {
+    		var b = create(B());
+    		
+    		var buffer = new ByteArrayOutputStream();
+            PrintStream ps = new PrintStream(buffer);
+            invoke(b, "bar", ps);
+            assertTrue(buffer.toString().endsWith("Bingo\n"));    		
+    	} catch(ReflectiveOperationException e) {
+    		throw new AssertionError(e);
+    	}
+    }
+    
+    public void subtestBarZ() {
+    	try {
+    		var z = create(Z());
+    		
+    		var buffer = new ByteArrayOutputStream();
+            PrintStream ps = new PrintStream(buffer);
+            invoke(z, "bar", ps);
+            assertEquals("Hello\n", buffer.toString());    		
+    	} catch(ReflectiveOperationException e) {
+    		throw new AssertionError(e);
+    	}
+    }
+    
+    public void subtestTestC() {
+    	try {
+    		var c = create(C());
+    		
+    		var buffer = new ByteArrayOutputStream();
+            PrintStream ps = new PrintStream(buffer);
+            invoke(c, "test", ps);
+            assertEquals("Test\n", buffer.toString());    		
+    	} catch(ReflectiveOperationException e) {
+    		throw new AssertionError(e);
+    	}
+    }
+    
+    public static boolean areRelated(Class<?> class1, Class<?> class2) {
+    	return class1.isAssignableFrom(class2) || class2.isAssignableFrom(class1);
+    }
+
+    
+    public static int toInt(Object o) {
+		if(o != null && o instanceof Integer) {
+			return (Integer) o;
+		} else {
+			throw new AssertionError("Illegal: not an integer");
+		}
+    }
+    
+    public static boolean toBoolean(Object o) {
+		if(o != null && o instanceof Boolean) {
+			return (Boolean) o;
+		} else {
+			throw new AssertionError("Illegal: not a boolean");
+		}
+    }
+
+	
+    /*
+     * Helper methods with lots of reflection and lambda expressions (the other
+     * "lambda"). You may ignore these.
+     */
+
+    private Class<?> A() throws ClassNotFoundException {
+        return getClass("A");
+    }
+
+    private Class<?> B() throws ClassNotFoundException {
+        return getClass("B");
+    }
+
+    private Class<?> C() throws ClassNotFoundException {
+        return getClass("C");
+    }
+
+    private Class<?> D() throws ClassNotFoundException {
+        return getClass("D");
+    }
+
+    private Class<?> Z() throws ClassNotFoundException {
+        return getClass("Z");
+    }
+
+    private Class<?> getClass(String className) throws ClassNotFoundException {
+        return classLoader.loadClass(className);
+    }
+
+    /**
+     * Creates an instance of the given class, using the no-args constructor.
+     */
+    private Object create(Class<?> clazz) throws ReflectiveOperationException {
+        Constructor<?> constructor = clazz.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        return constructor.newInstance();
+    }
+
+
+    /**
+     * Calls the method with the given name on the given receiver, passing the given
+     * parameters. Uses {@link #getMethod(Class, String, Class, Class...)} to find
+     * the method, based on the types of the receiver and the parameters.
+     */
+    private Object invoke(Object receiver, String name, Object... params)
+            throws ReflectiveOperationException {
+        assertNotNull(receiver);
+
+        var paramTypes = stream(params)
+                .map(Object::getClass)
+                .toArray(Class<?>[]::new);
+        
+        Method method = getMethod(receiver.getClass(), name, null, paramTypes);
+        assertNotNull(method);
+        method.setAccessible(true);
+        return method.invoke(receiver, params);
+    }
+
+    /**
+     * Finds the method of the given class (including inherited ones) that has the
+     * given name, compatible parameter types, and a compatible return type. If the
+     * given return type is <code>null</code>, any return type is valid.
+     * <p>
+     * Note that there could actually be multiple matching methods, but we assume
+     * that there is exactly one.
+     */
+    private Method getMethod(Class<?> clazz, String name, Class<?> returnType, Class<?>... paramTypes) {
+    	return allMethods(clazz, name, returnType, paramTypes).findFirst().orElse(null);
+    }
+
+    /**
+     * Finds all methods of the given class (including inherited ones) that have the
+     * given name, compatible parameter types, and a compatible return type. If the
+     * given return type is <code>null</code>, any return type is valid.
+     */
+    private Stream<Method> allMethods(Class<?> clazz, String name, Class<?> returnType, Class<?>... paramTypes) {
+        return Stream.<Class<?>>iterate(clazz, c -> c.getSuperclass())
+                .takeWhile(Objects::nonNull)
+                .flatMap(c -> stream(c.getDeclaredMethods()))
+                .filter(m -> m.getName().equals(name))
+                .filter(m -> returnType == null || returnType.isAssignableFrom(m.getReturnType()))
+                .filter(m -> m.getParameterCount() == paramTypes.length)
+                .filter(m -> range(0, m.getParameterCount())
+                        .allMatch(i -> m.getParameterTypes()[i].isAssignableFrom(paramTypes[i])));
+    }
+}
