@@ -16,15 +16,53 @@ public class Hotellerie {
 	}
 	
 	public static void analyse(Scanner input, PrintStream output) throws FileNotFoundException {
-		// TODO: Lesen Sie das Dateiinhalt von input und geben Sie Ihre Loesung nach output aus.
+		// don't need number of bookings
+		input.next();
 		
-		// Ihr Code kommt hier hin
+		// rooms
+		int[] numBookings = new int[256];
+		int[] numDays = new int[256];
+		double[] profit = new double[256];
 		
-		// Ersetzen Sie null im unteren Code mit Ihren entsprechenden Loesungen
-		output.println("Am haeufigsten gebucht: " + null);
-		output.println("Am meisten besetzt: " + null);
-		output.println("Groessten Betrag eingebracht: " + null);
-		output.println("Gesamteinnahmen des Hotels: " + null); 
+		while (input.hasNext()) {
+			// get info
+			int room = input.nextInt() - 1;
+			++numBookings[room];
+			
+			int duration = -input.nextInt() + input.nextInt() + 1;
+			numDays[room] += duration;
+			
+			profit[room] += (duration * input.nextDouble()) * (1 - 0.01 * input.nextInt());
+		}
+		
+		// get max whole profit
+		int maxBookings = 0;
+		int maxDays = 0;
+		int maxProfit = 0;
+		double cash = profit[0];
+		
+		for (int i = 1; i < profit.length; ++i) {
+			
+			if (numBookings[i] > numBookings[maxBookings]) {
+				maxBookings = i;
+			}
+			
+			if (numDays[i] > numDays[maxDays]) {
+				maxDays = i;
+			}
+			
+			if (profit[i] > profit[maxProfit]) {
+				maxProfit = i;
+			}
+			
+			cash += profit[i];
+		}
+		
+		// +1 since we started at 0
+		output.println("Am haeufigsten gebucht: " + (maxBookings + 1));
+		output.println("Am meisten besetzt: " + (maxDays + 1));
+		output.println("Groessten Betrag eingebracht: " + (maxProfit + 1));
+		output.println("Gesamteinnahmen des Hotels: " + cash); 
 	}
 	
 	
