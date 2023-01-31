@@ -369,39 +369,39 @@ public class SwissTimeTest {
     @Test
     public void testCorrectSuffixAmMittag() {
         // noon times with the hour "12i" (everything between 11:25 and 12:24)
-        // should end with " am mittag"
-        assertTrue(SwissTime.toSwissGerman("11:25").endsWith(" am mittag"));
-        assertTrue(SwissTime.toSwissGerman("11:30").endsWith(" am mittag"));
-        assertTrue(SwissTime.toSwissGerman("11:45").endsWith(" am mittag"));
-        assertTrue(SwissTime.toSwissGerman("12:00").endsWith(" am mittag"));
-        assertTrue(SwissTime.toSwissGerman("12:15").endsWith(" am mittag"));
-        assertTrue(SwissTime.toSwissGerman("12:24").endsWith(" am mittag"));
+        // should end with " am mettag"
+        assertTrue(SwissTime.toSwissGerman("11:25").endsWith(" am mettag"));
+        assertTrue(SwissTime.toSwissGerman("11:30").endsWith(" am mettag"));
+        assertTrue(SwissTime.toSwissGerman("11:45").endsWith(" am mettag"));
+        assertTrue(SwissTime.toSwissGerman("12:00").endsWith(" am mettag"));
+        assertTrue(SwissTime.toSwissGerman("12:15").endsWith(" am mettag"));
+        assertTrue(SwissTime.toSwissGerman("12:24").endsWith(" am mettag"));
     }
 
     @Test
     public void testCorrectSuffixAmNamittag() {
         // afternoon times with the hours "1", "2", "3", "4i" or "5i"
-        // (everything between 12:25 and 17:24) should end with " am namittag"
-        assertTrue(SwissTime.toSwissGerman("12:25").endsWith(" am namittag"));
-        assertTrue(SwissTime.toSwissGerman("13:00").endsWith(" am namittag"));
-        assertTrue(SwissTime.toSwissGerman("14:00").endsWith(" am namittag"));
-        assertTrue(SwissTime.toSwissGerman("15:15").endsWith(" am namittag"));
-        assertTrue(SwissTime.toSwissGerman("16:30").endsWith(" am namittag"));
-        assertTrue(SwissTime.toSwissGerman("16:45").endsWith(" am namittag"));
-        assertTrue(SwissTime.toSwissGerman("17:24").endsWith(" am namittag"));
+        // (everything between 12:25 and 17:24) should end with " am nomittag"
+        assertTrue(SwissTime.toSwissGerman("12:25").endsWith(" am nomittag"));
+        assertTrue(SwissTime.toSwissGerman("13:00").endsWith(" am nomittag"));
+        assertTrue(SwissTime.toSwissGerman("14:00").endsWith(" am nomittag"));
+        assertTrue(SwissTime.toSwissGerman("15:15").endsWith(" am nomittag"));
+        assertTrue(SwissTime.toSwissGerman("16:30").endsWith(" am nomittag"));
+        assertTrue(SwissTime.toSwissGerman("16:45").endsWith(" am nomittag"));
+        assertTrue(SwissTime.toSwissGerman("17:24").endsWith(" am nomittag"));
     }
 
     @Test
     public void testCorrectSuffixAmAbig() {
         // evening times with the hours "6i", "7i", "8i", "9i" or "10i"
-        // (everything between 17:25 and 22:24) should end with " am abig"
-        assertTrue(SwissTime.toSwissGerman("17:25").endsWith(" am abig"));
-        assertTrue(SwissTime.toSwissGerman("18:00").endsWith(" am abig"));
-        assertTrue(SwissTime.toSwissGerman("19:00").endsWith(" am abig"));
-        assertTrue(SwissTime.toSwissGerman("20:15").endsWith(" am abig"));
-        assertTrue(SwissTime.toSwissGerman("21:30").endsWith(" am abig"));
-        assertTrue(SwissTime.toSwissGerman("21:45").endsWith(" am abig"));
-        assertTrue(SwissTime.toSwissGerman("22:24").endsWith(" am abig"));
+        // (everything between 17:25 and 22:24) should end with " am obe"
+        assertTrue(SwissTime.toSwissGerman("17:25").endsWith(" am obe"));
+        assertTrue(SwissTime.toSwissGerman("18:00").endsWith(" am obe"));
+        assertTrue(SwissTime.toSwissGerman("19:00").endsWith(" am obe"));
+        assertTrue(SwissTime.toSwissGerman("20:15").endsWith(" am obe"));
+        assertTrue(SwissTime.toSwissGerman("21:30").endsWith(" am obe"));
+        assertTrue(SwissTime.toSwissGerman("21:45").endsWith(" am obe"));
+        assertTrue(SwissTime.toSwissGerman("22:24").endsWith(" am obe"));
     }
 
     /*
