@@ -412,9 +412,9 @@ public class SwissTimeTest {
     public void testCorrectFormatComplete() {
         assertEquals("12i znacht",               SwissTime.toSwissGerman("00:00"));
         assertEquals("5 vor halbi 10i am morge", SwissTime.toSwissGerman("09:25"));
-        assertEquals("1 ab 12i am mittag",       SwissTime.toSwissGerman("12:01"));
-        assertEquals("14 vor 5i am namittag",    SwissTime.toSwissGerman("16:46"));
-        assertEquals("9 vor 10i am abig",        SwissTime.toSwissGerman("21:51"));
+        assertEquals("1 ab 12i am mettag",       SwissTime.toSwissGerman("12:01"));
+        assertEquals("14 vor 5i am nomittag",    SwissTime.toSwissGerman("16:46"));
+        assertEquals("9 vor 10i am obe",        SwissTime.toSwissGerman("21:51"));
         assertEquals("7 ab halbi 11i znacht",    SwissTime.toSwissGerman("22:37"));
     }
 }
